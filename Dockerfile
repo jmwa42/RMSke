@@ -46,8 +46,8 @@ FROM python:3.11-slim AS django
 WORKDIR /app
 
 # Copy Django backend
-COPY rental_backend/ /app/rental_backend/
-COPY rental_backend/requirements.txt /app/requirements.txt
+COPY backend/ /app/rental_backend/
+COPY backend/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy bot from node stage
