@@ -8,9 +8,6 @@ startCommand = "node index.js"
 internal = true
 external = true # Bot needs to expose /qr for your browser
 
-[build]
-builder = "Docker"
-
 [services.backend]
 path = "backend"
 env = "python"
