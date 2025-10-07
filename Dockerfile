@@ -43,10 +43,10 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # Stage 2: Python (Django)
 FROM python:3.11-slim AS django
-WORKDIR /app
+WORKDIR /backend
 
 # Copy Django backend
-COPY backend/ /app/rental_backend/
+COPY backend/ /backend/rental_backend/
 COPY backend/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
