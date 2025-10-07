@@ -116,7 +116,8 @@ export async function mpesaWebhook(req, res) {
       const phone = callback.CallbackMetadata.Item.find(i => i.Name === "PhoneNumber")?.Value;
       const mpesaCode = callback.CallbackMetadata.Item.find(i => i.Name === "MpesaReceiptNumber")?.Value;
 
-      // Send success update to your Django backend
+
+// Send success update to your Django backend
       await axios.post(`${DJANGO_BASE}/api/mpesa/confirm/`, {
         CheckoutRequestID: checkoutRequestID,
         Amount: amount,
@@ -140,4 +141,13 @@ export async function mpesaWebhook(req, res) {
   }
 }
 
+export async function rentNotify(req, res) {
+  const { tenant, phone, amount, invoice_id, date } = req.body;
+  console.log("🏠 Rent payment notification:", req.body);
+
+  // Optionally send WhatsApp confirmation message here
+  // sendWhatsAppMessage(phone, `Rent payment of ${amount} confirmed.`);
+
+  res.json({ status: "received" });
+}
 

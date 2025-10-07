@@ -5,6 +5,9 @@ import bodyParser from "body-parser";
 import path from "path";
 import { fileURLToPath } from "url";
 import { mpesaWebhook } from "../bot/mpesa.js";  // ✅ NEW: import webhook handler
+import { rentNotify } from "../bot/mpesa.js";
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,6 +18,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json()); // ✅ NEW: enable JSON parsing for webhooks
 app.use(express.static(path.join(__dirname, "public")));
+app.post("/api/rent/notify", rentNotify);
 
 // --- ROUTES ---
 

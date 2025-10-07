@@ -98,6 +98,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+import os
+BOT_WEBHOOK_URL = os.getenv("BOT_WEBHOOK_URL")
+
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
