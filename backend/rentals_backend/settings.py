@@ -2,11 +2,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-ko_-dz=k=c+y!ph6=^0q6%@n2mnt$$^6nz)&&*6+3)!6f!#n7z'
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -76,7 +76,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True # or restrict to your dashboard origin
+CORS_ALLOWED_ORIGINS = [
+    config("FRONTEND_URL", default="http://localhost:3000"),
+]
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST"),
+        "PORT": config("DB_PORT", default="5432"),
+    }
+}
+
+WEBHOOK_URL = config("WEBHOOK_URL", default="")
 
 
 REST_FRAMEWORK = {
