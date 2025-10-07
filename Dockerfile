@@ -31,8 +31,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-utils \
     chromium \
  && rm -rf /var/lib/apt/lists/*
- 
-FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -40,8 +38,6 @@ COPY package*.json ./
 RUN npm install --omit=dev
 
 COPY . .
-RUN pip install --no-cache-dir -r requirements.txt
-CMD ["gunicorn", "backend.wsgi", "--bind", "0.0.0.0:8000"]
 
 # Puppeteer config
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
