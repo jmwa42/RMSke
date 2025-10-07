@@ -1,24 +1,11 @@
 [build]
-builder = "Dockerfile"
-context = "bot"
-dockerfile = "bot/Dockerfile"
+builder = "DOCKERFILE"
+dockerfile = "Dockerfile"
 
 [deploy]
-startCommand = "node index.js"
+startCommand = ""
 
 [network]
 internal = true
 external = true # Bot needs to expose /qr for your browser
-
-[services.backend]
-path = "backend"
-env = "python"
-
-[services.bot]
-path = "bot"
-env = "node"
-
-[services.dashboard]
-path = "dashboard"
-env = "node"
 
