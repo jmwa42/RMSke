@@ -1,5 +1,7 @@
 [build]
 builder = "Dockerfile"
+context = "bot"
+dockerfile = "bot/Dockerfile"
 
 [deploy]
 startCommand = "node index.js"
