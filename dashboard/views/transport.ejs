@@ -1,0 +1,17 @@
+<h2>Transport Fees</h2>
+<form method="POST" action="/dashboard/transport">
+  <input name="route" placeholder="Route (e.g. Road A)" required />
+  <input name="courts" placeholder="Courts (e.g. 1,2,3)" />
+  <input name="fee" placeholder="Fee (Ksh)" required />
+  <button type="submit">Add</button>
+</form>
+
+<table>
+  <thead><tr><th>Route</th><th>Courts</th><th>Fee</th></tr></thead>
+  <tbody>
+    <% (transport || []).forEach(t => { %>
+      <tr><td><%= t.route %></td><td><%= t.courts %></td><td><%= t.fee %></td></tr>
+    <% }) %>
+  </tbody>
+</table>
+

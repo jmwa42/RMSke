@@ -1,0 +1,14 @@
+
+<h1>💰 Payments</h1>
+<table border="1" cellpadding="5">
+  <tr><th>Phone</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+  <% payments.forEach(pay => { %>
+    <tr>
+      <td><%= pay.phone %></td>
+      <td><%= pay.amount %></td>
+      <td><%= pay.status %></td>
+      <td><%= pay.date %></td>
+    </tr>
+  <% }) %>
+</table>
+
