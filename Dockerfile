@@ -62,7 +62,7 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 # Start Django + WhatsApp bot
-CMD sh -c "python /app/backend/manage.py migrate && \
+CMD sh -c "python /app/manage.py migrate && \
            (cd /app/bot && node index.js &) && \
            gunicorn backend.rentals_backend.wsgi:application --chdir /app/backend --bind 0.0.0.0:8000"
 
