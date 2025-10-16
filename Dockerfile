@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /bot
-COPY package*.json ./
+COPY bot/package*.json ./
 RUN npm install --omit=dev
 COPY bot/ .
 
@@ -43,21 +43,25 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # Stage 2: Python (Django)
 FROM python:3.11-slim AS django
-WORKDIR /backend
+
+WORKDIR /app
 
 # Copy Django backend
-COPY backend/ /backend/rental_backend/
+COPY backend/ /app/backend/
 COPY backend/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy bot from node stage
+# Copy bot from Node stage
 COPY --from=nodebot /bot /app/bot
+
+# Environment variables (safe defaults)
+ENV DJANGO_SETTINGS_MODULE=backend.rentals_backend.settings
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8000
 
-# Start both Django + WhatsApp bot
-CMD sh -c "python backend/manage.py migrate && \
-           (cd bot && node index.js &) && \
+# Start both Django and Node bot
+CMD sh -c "python /app/backend/manage.py migrate && \
+           (cd /app/bot && node index.js &) && \
            gunicorn backend.rentals_backend.wsgi:application --bind 0.0.0.0:8000"
-# CMD ["gunicorn", "backend.rentals_backend.wsgi:application", "--bind", "0.0.0.0:8000"]
 
