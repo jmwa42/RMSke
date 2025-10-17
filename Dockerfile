@@ -1,7 +1,9 @@
-# Stage 1: Node.js (with Chromium for Puppeteer)
+# =========================
+# Stage 1: Node.js (WhatsApp Bot)
+# =========================
 FROM node:18-bullseye AS nodebot
 
-# Install Chromium & dependencies
+# Install Chromium dependencies for Puppeteer
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     fonts-liberation \
@@ -33,7 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
  && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /bot
+WORKDIR /app/bot
 COPY bot/package*.json ./
 RUN npm install --omit=dev
 COPY bot/ .
@@ -41,27 +43,28 @@ COPY bot/ .
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Stage 2: Python (Django)
-FROM python:3.11-slim AS django
 
+# =========================
+# Stage 2: Python (Django Backend)
+# =========================
+FROM python:3.11-slim AS django
 WORKDIR /app
 
-# Copy Django backend
-COPY backend/ /app/backend/
+# Copy backend files
+COPY backend /app/backend
 COPY backend/requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy bot from Node stage
-COPY --from=nodebot /bot /app/bot
+# Install dependencies
+RUN pip install --no-cache-dir -r /app/requirements.txt gunicorn
 
-# Environment variables (safe defaults)
-ENV DJANGO_SETTINGS_MODULE=backend.rentals_backend.settings
-ENV PYTHONUNBUFFERED=1
+# Copy Node bot from previous stage
+COPY --from=nodebot /app/bot /app/bot
 
+# Expose port
 EXPOSE 8000
 
-# Start both Django and Node bot
-CMD sh -c "python /app/backend/manage.py migrate && \
-           (cd /app/bot && node index.js &) && \
-           gunicorn backend.rentals_backend.wsgi:application --bind 0.0.0.0:8000"
+# Start Django + WhatsApp bot
+CMD sh -c "python backend/manage.py migrate && \
+           (cd bot && node index.js &) && \
+           gunicorn rentals_backend.wsgi:application --chdir backend --bind 0.0.0.0:8000"
 
