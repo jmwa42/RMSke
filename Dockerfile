@@ -36,7 +36,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app/bot
-COPY bot/package*.json ./
+COPY app/package*.json ./
 RUN npm install --omit=dev
 COPY bot/ .
 
