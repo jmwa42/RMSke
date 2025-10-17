@@ -11,22 +11,17 @@
 
 FROM node:18-bullseye
 
-# Chromium + deps for puppeteer (if needed)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates chromium \
-  && rm -rf /var/lib/apt/lists/*
+# chromium deps for puppeteer
+RUN apt-get update && apt-get install -y --no-install-recommends chromium && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-COPY bot/package*.json ./
+COPY package*.json ./
 RUN npm ci --production
-
-COPY bot /app
+COPY . .
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 EXPOSE 5000
-
 CMD ["node", "index.js"]
 
